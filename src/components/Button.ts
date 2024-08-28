@@ -5,6 +5,7 @@ export default class Button extends Phaser.GameObjects.Container {
   private buttonText?: Phaser.GameObjects.Text; // 将 buttonText 设置为可选
   private defaultTexture: string; // 默认状态的纹理
   private clickedTexture: string; // 点击后的纹理
+  private enabled: boolean; // 添加 enabled 属性
 
   constructor(
     scene: Phaser.Scene,
@@ -22,6 +23,7 @@ export default class Button extends Phaser.GameObjects.Container {
 
     this.defaultTexture = defaultTexture;
     this.clickedTexture = clickedTexture;
+    this.enabled = true; // 初始化为启用状态
 
     // 创建按钮的背景图像
     this.buttonImage = scene.add.image(0, 0, defaultTexture);
@@ -53,20 +55,26 @@ export default class Button extends Phaser.GameObjects.Container {
 
     // 添加点击事件
     this.buttonImage.on("pointerdown", () => {
-      this.buttonImage.setTexture(this.clickedTexture); // 切换到点击状态的纹理
-      if (callback) {
-        callback();
+      if (this.enabled) {
+        this.buttonImage.setTexture(this.clickedTexture); // 切换到点击状态的纹理
+        if (callback) {
+          callback();
+        }
       }
     });
 
     // 添加释放事件，恢复默认状态
     this.buttonImage.on("pointerup", () => {
-      this.buttonImage.setTexture(this.defaultTexture); // 恢复默认状态的纹理
+      if (this.enabled) {
+        this.buttonImage.setTexture(this.defaultTexture); // 恢复默认状态的纹理
+      }
     });
 
     // 添加鼠标移出事件，确保在鼠标移出时恢复默认状态
     this.buttonImage.on("pointerout", () => {
-      this.buttonImage.setTexture(this.defaultTexture); // 恢复默认状态的纹理
+      if (this.enabled) {
+        this.buttonImage.setTexture(this.defaultTexture); // 恢复默认状态的纹理
+      }
     });
 
     // 将按钮添加到当前场景
@@ -96,5 +104,29 @@ export default class Button extends Phaser.GameObjects.Container {
       this.buttonText.setScale(Math.min(scaleX, scaleY));
     }
     return this;
+  }
+
+  // 启用按钮
+  public enable(): void {
+    this.enabled = true;
+    this.buttonImage.setInteractive();
+    this.setAlpha(1); // 恢复全透明度
+  }
+
+  // 禁用按钮
+  public disable(): void {
+    this.enabled = false;
+    this.buttonImage.disableInteractive();
+    this.setAlpha(0.5); // 使按钮半透明以表示禁用状态
+  }
+
+  // 显示按钮
+  public show(): void {
+    this.setVisible(true);
+  }
+
+  // 隐藏按钮
+  public hide(): void {
+    this.setVisible(false);
   }
 }
