@@ -9,7 +9,8 @@
   "author": "Ancient",
   "license": "MIT",
   "dependencies": {
-    "phaser": "^3.80.1"
+    "phaser": "^3.80.1",
+    "protobufjs": "^7.4.0"
   },
   "devDependencies": {
     "typescript": "^5.5.4"
