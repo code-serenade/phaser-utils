@@ -1,6 +1,6 @@
 import Phaser from "phaser";
 
-export default class Button extends Phaser.GameObjects.Container {
+export default class ButtonComponet extends Phaser.GameObjects.Container {
   private buttonImage: Phaser.GameObjects.Image;
   private buttonText?: Phaser.GameObjects.Text; // 将 buttonText 设置为可选
   private defaultTexture: string; // 默认状态的纹理
