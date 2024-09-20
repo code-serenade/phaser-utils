@@ -1,22 +1,25 @@
 import Phaser from "phaser";
-import { LightComponent } from "./Light"; // 假设你已经定义了 LightComponent
+import { LightComponent } from "./Light";
 
 export class SpinComponent extends Phaser.GameObjects.Container {
   private lights: LightComponent[] = [];
   private numSpin: number;
-  private size: number = 100;
+  private sizeX: number;
+  private sizeY: number;
 
   constructor(
     scene: Phaser.Scene,
     texture: string,
     numSpin: number,
-    size: number,
+    sizeX: number,
+    sizeY: number,
     x: number,
     y: number
   ) {
     super(scene, x, y);
     this.numSpin = numSpin;
-    this.size = size;
+    this.sizeX = sizeX;
+    this.sizeY = sizeY;
     this.scene.add.existing(this);
 
     this.createLights(texture);
@@ -24,57 +27,74 @@ export class SpinComponent extends Phaser.GameObjects.Container {
   }
 
   private createLights(texture: string): void {
-    for (let i = 0; i < this.numSpin; i++) {
-      const light = new LightComponent(this.scene, 0, 0, texture); // 假设你有个 `lightTexture`
-      //   light.setVisible(false);
-      light.setDisplaySize(this.size, this.size); // 设置大小
-      this.lights.push(light);
+    this.lights = Array.from({ length: this.numSpin }, () => {
+      const light = new LightComponent(this.scene, 0, 0, texture);
+      light.setDisplaySize(this.sizeX, this.sizeY);
       this.add(light);
-    }
+      return light;
+    });
   }
 
   // 设置精灵和框架的位置
   private positionSprites(): void {
     const side = Math.floor(this.numSpin / 4);
 
-    for (let i = 0; i < this.numSpin; i++) {
-      let x: number, y: number;
+    this.lights.forEach((light, i) => {
+      const { x, y } = this.calculatePosition(i, side);
+      light.setPosition(x, y);
+    });
+  }
 
-      if (i < side) {
-        x = this.size * i;
-        y = 0;
-      } else if (i < 2 * side) {
-        x = this.size * side;
-        y = this.size * (i - side);
-      } else if (i < 3 * side) {
-        x = this.size * (3 * side - i);
-        y = this.size * side;
-      } else {
-        x = 0;
-        y = this.size * (4 * side - i);
-      }
+  private calculatePosition(i: number, side: number): { x: number; y: number } {
+    let x = 0,
+      y = 0;
 
-      // 设置 light 的位置，假设转盘的中心是 (266, 327)
-      this.lights[i].setPosition(x, y);
+    if (i < side) {
+      x = this.sizeX * i;
+    } else if (i < 2 * side) {
+      x = this.sizeX * side;
+      y = this.sizeY * (i - side);
+    } else if (i < 3 * side) {
+      x = this.sizeX * (3 * side - i);
+      y = this.sizeY * side;
+    } else {
+      y = this.sizeY * (4 * side - i);
     }
+
+    return { x, y };
   }
 
-  splash(i: number): void {
-    this.lights[i].splash();
+  splash(splashSet: Set<number>): void {
+    this.lights.forEach((light, i) => {
+      if (splashSet.has(i)) {
+        light.splash(); // 触发 splash
+      } else {
+        light.stop(); // 其他灯光停止
+      }
+    });
   }
 
-  stop(i: number): void {
-    this.lights[i].stop();
+  stopAll(): void {
+    this.lights.forEach((light) => light.stop());
+  }
+
+  lightsVisible(visibleSet: Set<number>): void {
+    this.lights.forEach((light, i) => {
+      if (visibleSet.has(i)) {
+        light.setVisible(true);
+      } else {
+        light.setVisible(false);
+      }
+    });
+  }
+
+  lightsInvisible(): void {
+    this.lights.forEach((light) => light.setVisible(false));
   }
 
   // 添加 destroy() 方法
   destroy(fromScene?: boolean): void {
-    // 遍历销毁每一个 LightComponent
-    this.lights.forEach((light) => {
-      light.destroy();
-    });
-
-    // 调用父类的 destroy 来销毁容器本身
+    this.lights.forEach((light) => light.destroy());
     super.destroy(fromScene);
   }
 }

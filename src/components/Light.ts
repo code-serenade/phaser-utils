@@ -1,10 +1,16 @@
-import Phaser from 'phaser';
+import Phaser from "phaser";
 
 export class LightComponent extends Phaser.GameObjects.Image {
   private blinkTimer: Phaser.Time.TimerEvent | null = null;
   private isBlinking: boolean = false;
 
-  constructor(scene: Phaser.Scene, x: number, y: number, texture: string, blinkTime: number = 150) {
+  constructor(
+    scene: Phaser.Scene,
+    x: number,
+    y: number,
+    texture: string,
+    blinkTime: number = 150
+  ) {
     super(scene, x, y, texture);
 
     // 设置 anchor 到中心
@@ -18,7 +24,7 @@ export class LightComponent extends Phaser.GameObjects.Image {
       loop: true,
       paused: true,
     });
-   
+
     this.scene.add.existing(this);
     // this.setVisible(false);
   }
@@ -40,7 +46,7 @@ export class LightComponent extends Phaser.GameObjects.Image {
     if (!this.isBlinking) {
       this.isBlinking = true;
       if (this.blinkTimer) {
-        this.blinkTimer.paused = false;  // 开始闪烁
+        this.blinkTimer.paused = false; // 开始闪烁
       }
     }
   }
@@ -49,9 +55,9 @@ export class LightComponent extends Phaser.GameObjects.Image {
     if (this.isBlinking) {
       this.isBlinking = false;
       if (this.blinkTimer) {
-        this.blinkTimer.paused = true;  // 停止闪烁
+        this.blinkTimer.paused = true; // 停止闪烁
       }
-      this.setVisible(true);  // 设置可见
+      this.setVisible(true); // 设置可见
     }
   }
 
