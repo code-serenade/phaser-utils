@@ -41,7 +41,7 @@ export class LabelComponent extends Phaser.GameObjects.Container {
     );
 
     // 使用传入的 origin 参数设置文本的 origin，默认值为 { x: 1, y: 0.5 }
-    const textOrigin = config.textOrigin ?? { x: 1, y: 0.5 };
+    const textOrigin = config.textOrigin ?? { x: 0.5, y: 0.5 };
     this.labelText.setOrigin(textOrigin.x, textOrigin.y);
     this.add(this.labelText);
 
@@ -66,5 +66,20 @@ export class LabelComponent extends Phaser.GameObjects.Container {
   // 更新文本的 origin
   setTextOrigin(newOrigin: { x: number; y: number }) {
     this.labelText.setOrigin(newOrigin.x, newOrigin.y);
+  }
+
+  destroy(fromScene?: boolean): void {
+    // 销毁文本对象
+    if (this.labelText) {
+      this.labelText.destroy();
+    }
+
+    // 销毁图片对象
+    if (this.labelImage) {
+      this.labelImage.destroy();
+    }
+
+    // 调用父类的 destroy 方法，确保整个容器被销毁
+    super.destroy(fromScene);
   }
 }

@@ -1,5 +1,5 @@
 import Phaser from "phaser";
-import Button from "./Button"; // 假设你已将Button类保存为Button.ts
+import { ButtonComponent } from "./Button"; // 假设你已将Button类保存为Button.ts
 
 export interface ButtonGridConfig {
   x: number; // 网格的起始 x 坐标
@@ -56,7 +56,7 @@ export class ButtonGrid {
         const buttonText = buttonTexts[textIndex] || `Button ${textIndex + 1}`;
         const callback = callbacks[textIndex];
 
-        const button = new Button(
+        const button = new ButtonComponent(
           this.scene,
           x,
           y,
@@ -82,9 +82,9 @@ export class ButtonGrid {
     this.buttonGroup.children.iterate(
       (button: Phaser.GameObjects.GameObject) => {
         if (enabled) {
-          (button as Button).enable();
+          (button as ButtonComponent).enable();
         } else {
-          (button as Button).disable();
+          (button as ButtonComponent).disable();
         }
         return true; // 返回 true 以继续遍历
       }
