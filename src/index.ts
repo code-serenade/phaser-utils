@@ -4,9 +4,9 @@ import { LightComponent } from "./components/Light";
 import { RowLabelComponent } from "./components/RowLabels";
 import { SpinComponent } from "./components/Spin";
 
-export { WebSocketService } from "./services/websocket";
-export { eventManager } from "./services/events";
-export { protoService } from "./services/proto_service";
+import { WebSocketService } from "./services/websocket";
+import { eventManager } from "./services/events";
+import { protoService } from "./services/proto_service";
 
 var Components = {
   ButtonComponent,
@@ -16,4 +16,10 @@ var Components = {
   SpinComponent,
 };
 
-export { Components };
+var Service = {
+  WebSocketService,
+  eventManager,
+  protoService,
+};
+
+export { Components, Service };
