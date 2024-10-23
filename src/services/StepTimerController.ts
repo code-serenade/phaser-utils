@@ -44,7 +44,7 @@ export class StepTimerController {
 
     const speed = this.getStepSpeed();
     setTimeout(() => {
-      this.onUpdate; // 执行每步更新
+      this.onUpdate(); // 执行每步更新
       this.currentSteps++;
 
       // 如果达到目标步数，则停止
