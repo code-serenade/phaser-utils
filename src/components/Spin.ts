@@ -7,6 +7,9 @@ export class SpinComponent extends Phaser.GameObjects.Container {
   private sizeX: number;
   private sizeY: number;
 
+  private currentPos: number = 0;
+  private highlights: Set<number> = new Set<number>([]);
+
   constructor(
     scene: Phaser.Scene,
     texture: string,
@@ -80,7 +83,7 @@ export class SpinComponent extends Phaser.GameObjects.Container {
 
   lightsVisible(visibleSet: Set<number>): void {
     this.lights.forEach((light, i) => {
-      if (visibleSet.has(i)) {
+      if (this.currentPos === i || visibleSet.has(i)) {
         light.setVisible(true);
       } else {
         light.setVisible(false);
@@ -90,6 +93,11 @@ export class SpinComponent extends Phaser.GameObjects.Container {
 
   lightsInvisible(): void {
     this.lights.forEach((light) => light.setVisible(false));
+  }
+
+  move(): void {
+    this.currentPos = (this.currentPos + 1) % this.numSpin;
+    this.lightsVisible(this.highlights);
   }
 
   // 添加 destroy() 方法
