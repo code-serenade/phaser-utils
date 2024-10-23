@@ -1,5 +1,15 @@
 import Phaser from "phaser";
 
+interface ButtonComponentConfig {
+  position?: { x: number; y: number };
+  defaultTexture: string; // 默认状态下的纹理
+  clickedTexture: string; // 点击状态下的纹理
+  imageSize?: { width: number; height: number }; // 图片的大小
+  text?: string; // 将 text 设置为可选
+  textStyle?: Phaser.Types.GameObjects.Text.TextStyle;
+  callback?: () => void;
+}
+
 export class ButtonComponent extends Phaser.GameObjects.Container {
   private buttonImage: Phaser.GameObjects.Image;
   private buttonText?: Phaser.GameObjects.Text; // 将 buttonText 设置为可选
@@ -7,43 +17,36 @@ export class ButtonComponent extends Phaser.GameObjects.Container {
   private clickedTexture: string; // 点击后的纹理
   private enabled: boolean; // 添加 enabled 属性
 
-  constructor(
-    scene: Phaser.Scene,
-    x: number,
-    y: number,
-    defaultTexture: string, // 默认状态下的纹理
-    clickedTexture: string, // 点击状态下的纹理
-    width?: number, // 可选宽度参数
-    height?: number, // 可选高度参数
-    text?: string, // 将 text 设置为可选
-    style?: Phaser.Types.GameObjects.Text.TextStyle,
-    callback?: () => void
-  ) {
+  constructor(scene: Phaser.Scene, config: ButtonComponentConfig) {
+    const { x, y } = config.position ?? { x: 0, y: 0 };
     super(scene, x, y);
 
-    this.defaultTexture = defaultTexture;
-    this.clickedTexture = clickedTexture;
+    this.defaultTexture = config.defaultTexture;
+    this.clickedTexture = config.clickedTexture;
     this.enabled = true; // 初始化为启用状态
 
     // 创建按钮的背景图像
-    this.buttonImage = scene.add.image(0, 0, defaultTexture);
+    this.buttonImage = scene.add.image(0, 0, this.defaultTexture);
 
     // 如果提供了宽度和高度参数，则调整图像大小
-    if (width && height) {
-      this.buttonImage.setDisplaySize(width, height);
+    if (config.imageSize) {
+      this.buttonImage.setDisplaySize(
+        config.imageSize.width,
+        config.imageSize.height
+      );
     }
 
     this.add(this.buttonImage);
 
     // 如果提供了文本，则创建按钮的文本
-    if (text) {
-      this.buttonText = scene.add.text(0, 0, text, style);
+    if (config.text) {
+      this.buttonText = scene.add.text(0, 0, config.text, config.textStyle);
       this.buttonText.setOrigin(0.5, 0.5);
 
       // 调整文本的缩放比例，以适应按钮的大小
-      if (width && height) {
-        const scaleX = width / this.buttonImage.width;
-        const scaleY = height / this.buttonImage.height;
+      if (config.imageSize) {
+        const scaleX = config.imageSize.width / this.buttonImage.width;
+        const scaleY = config.imageSize.height / this.buttonImage.height;
         this.buttonText.setScale(Math.min(scaleX, scaleY));
       }
 
@@ -57,8 +60,8 @@ export class ButtonComponent extends Phaser.GameObjects.Container {
     this.buttonImage.on("pointerdown", () => {
       if (this.enabled) {
         this.buttonImage.setTexture(this.clickedTexture); // 切换到点击状态的纹理
-        if (callback) {
-          callback();
+        if (config.callback) {
+          config.callback();
         }
       }
     });
@@ -76,9 +79,6 @@ export class ButtonComponent extends Phaser.GameObjects.Container {
         this.buttonImage.setTexture(this.defaultTexture); // 恢复默认状态的纹理
       }
     });
-
-    // 将按钮添加到当前场景
-    scene.add.existing(this);
   }
 
   // 可选的设置文本方法
