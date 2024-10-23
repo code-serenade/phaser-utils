@@ -6,9 +6,15 @@ export class StepTimerController {
   private defaultSpeed: number = 100;
   private isRunning: boolean = false;
   private onUpdate: () => void;
+  private onComplete: () => void; // 新增完成时的回调
 
-  constructor(onUpdate: () => void, defaultSpeed: number = 100) {
+  constructor(
+    onUpdate: () => void,
+    onComplete: () => void, // 新增的参数，用于通知父对象
+    defaultSpeed: number = 100
+  ) {
     this.onUpdate = onUpdate; // 每次步数更新时执行的回调
+    this.onComplete = onComplete; // 执行完成时的回调
     this.defaultSpeed = defaultSpeed;
   }
 
@@ -69,5 +75,6 @@ export class StepTimerController {
 
   stop(): void {
     this.isRunning = false;
+    this.onComplete(); // 运行结束时发送通知
   }
 }
