@@ -7,6 +7,7 @@ import { SpinComponent } from "./components/Spin";
 import { WebSocketService } from "./services/websocket";
 import { eventManager } from "./services/events";
 import { protoService } from "./services/proto_service";
+import { StepTimerController } from "./services/StepTimerController";
 
 var Components = {
   ButtonComponent,
@@ -20,6 +21,7 @@ var Service = {
   WebSocketService,
   eventManager,
   protoService,
+  StepTimerController,
 };
 
 export { Components, Service };
