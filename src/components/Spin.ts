@@ -100,6 +100,10 @@ export class SpinComponent extends Phaser.GameObjects.Container {
     this.lightsVisible(this.highlights);
   }
 
+  get_number_of_spin(): number {
+    return this.numSpin;
+  }
+
   // 添加 destroy() 方法
   destroy(fromScene?: boolean): void {
     this.lights.forEach((light) => light.destroy());
