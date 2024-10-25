@@ -116,6 +116,10 @@ export class SpinComponent extends Phaser.GameObjects.Container {
     this.highlights.add(this.currentPos);
   }
 
+  splash_highlights(): void {
+    this.splash(this.highlights);
+  }
+
   clear_highlight(): void {
     this.highlights.clear();
   }
