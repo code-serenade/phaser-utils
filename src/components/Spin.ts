@@ -104,6 +104,22 @@ export class SpinComponent extends Phaser.GameObjects.Container {
     return this.numSpin;
   }
 
+  get_current_pos(): number {
+    return this.currentPos;
+  }
+
+  get_highlights(): Set<number> {
+    return this.highlights;
+  }
+
+  add_highlights(index: number): void {
+    this.highlights.add(index);
+  }
+
+  clear_highlight(): void {
+    this.highlights.clear();
+  }
+
   // 添加 destroy() 方法
   destroy(fromScene?: boolean): void {
     this.lights.forEach((light) => light.destroy());
