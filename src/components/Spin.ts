@@ -95,6 +95,12 @@ export class SpinComponent extends Phaser.GameObjects.Container {
     this.lights.forEach((light) => light.setVisible(false));
   }
 
+  set_currentPos(index: number): void {
+    if (Number.isInteger(index) && index >= 0 && index <= this.numSpin) {
+      this.currentPos = index;
+    }
+  }
+
   move(): void {
     this.currentPos = (this.currentPos + 1) % this.numSpin;
     this.lightsVisible(this.highlights);
