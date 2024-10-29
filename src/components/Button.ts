@@ -60,9 +60,6 @@ export class ButtonComponent extends Phaser.GameObjects.Container {
     this.buttonImage.on("pointerdown", () => {
       if (this.enabled) {
         this.buttonImage.setTexture(this.clickedTexture); // 切换到点击状态的纹理
-        if (config.callback) {
-          config.callback();
-        }
       }
     });
 
@@ -70,6 +67,9 @@ export class ButtonComponent extends Phaser.GameObjects.Container {
     this.buttonImage.on("pointerup", () => {
       if (this.enabled) {
         this.buttonImage.setTexture(this.defaultTexture); // 恢复默认状态的纹理
+      }
+      if (config.callback) {
+        config.callback();
       }
     });
 
