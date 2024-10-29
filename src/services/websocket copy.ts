@@ -4,13 +4,13 @@ import { eventManager } from "./events";
 
 export class WebSocketService {
   private static instance: WebSocketService;
-  private static url: string;
+  private static url: string; // 静态属性用于存储 WebSocket 的 URL
   private socket: WebSocket;
-  private reconnectAttempts: number = 0;
-  private static maxReconnectAttempts: number = 5;
-  private static reconnectInterval: number = 3000;
-  private pendingMessages: { cmd: number; data: object }[] = []; // 暂存待发送的消息队列
+  private reconnectAttempts: number = 0; // 当前重连次数
+  private static maxReconnectAttempts: number = 5; // 最大重连次数
+  private static reconnectInterval: number = 3000; // 每次重连间隔时间（毫秒）
 
+  // 私有构造函数，防止直接通过 new 创建实例
   private constructor() {
     if (!WebSocketService.url) {
       throw new Error(
@@ -20,10 +20,12 @@ export class WebSocketService {
     this.connect();
   }
 
+  // 静态方法设置 WebSocket URL
   public static setUrl(url: string) {
     WebSocketService.url = url;
   }
 
+  // 获取单例实例的静态方法
   public static getInstance(): WebSocketService {
     if (!WebSocketService.instance) {
       WebSocketService.instance = new WebSocketService();
@@ -31,14 +33,17 @@ export class WebSocketService {
     return WebSocketService.instance;
   }
 
+  // 动态设置最大重连次数的静态方法
   public static setMaxReconnectAttempts(attempts: number) {
     WebSocketService.maxReconnectAttempts = attempts;
   }
 
+  // 动态设置重连间隔时间的静态方法
   public static setReconnectInterval(interval: number) {
     WebSocketService.reconnectInterval = interval;
   }
 
+  // 连接 WebSocket 的方法
   private connect() {
     this.socket = new WebSocket(WebSocketService.url);
     this.initialize();
@@ -48,12 +53,13 @@ export class WebSocketService {
   private initialize() {
     this.socket.onopen = () => {
       console.log("Connected to WebSocket server");
-      this.reconnectAttempts = 0;
-      this.flushPendingMessages(); // 重新连接后发送所有暂存的消息
+      this.reconnectAttempts = 0; // 重置重连次数
     };
 
     this.socket.onmessage = (event) => {
       const blob = event.data;
+
+      // 将 Blob 转换为 ArrayBuffer
       blob
         .arrayBuffer()
         .then((buffer: ArrayBuffer) => {
@@ -67,15 +73,16 @@ export class WebSocketService {
 
     this.socket.onclose = () => {
       console.log("Disconnected from WebSocket server");
-      this.handleReconnect();
+      this.handleReconnect(); // 调用重连逻辑
     };
 
     this.socket.onerror = (error) => {
       console.error("WebSocket error:", error);
-      this.handleReconnect();
+      this.handleReconnect(); // 发生错误时也调用重连逻辑
     };
   }
 
+  // 重连逻辑
   private handleReconnect() {
     if (this.reconnectAttempts < WebSocketService.maxReconnectAttempts) {
       this.reconnectAttempts++;
@@ -83,7 +90,7 @@ export class WebSocketService {
         `Attempting to reconnect... (${this.reconnectAttempts}/${WebSocketService.maxReconnectAttempts})`
       );
       setTimeout(() => {
-        this.connect();
+        this.connect(); // 再次尝试连接
       }, WebSocketService.reconnectInterval);
     } else {
       console.error(
@@ -99,24 +106,16 @@ export class WebSocketService {
       return true;
     } else {
       console.error(
-        "WebSocket is not open. Storing message to send after reconnect."
+        "WebSocket is not open. Ready state:",
+        this.socket.readyState
       );
-      this.pendingMessages.push({ cmd, data }); // 将消息暂存
       return false;
     }
-  }
-
-  // 在重新连接后发送所有暂存的消息
-  private flushPendingMessages() {
-    const messages = [...this.pendingMessages]; // 复制当前队列
-    this.pendingMessages = []; // 清空原队列
-
-    messages.forEach(({ cmd, data }) => {
-      this.send(cmd, data);
-    });
   }
 
   public close() {
     this.socket.close();
   }
+
+  // 这里可以添加更多功能，例如事件订阅、自动重连等
 }
