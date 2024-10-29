@@ -9,6 +9,7 @@ interface ButtonComponentConfig {
   textStyle?: Phaser.Types.GameObjects.Text.TextStyle;
   callbackDown?: () => void;
   callbackUp?: () => void;
+  callbackOut: () => void;
 }
 
 export class ButtonComponent extends Phaser.GameObjects.Container {
@@ -81,6 +82,9 @@ export class ButtonComponent extends Phaser.GameObjects.Container {
     this.buttonImage.on("pointerout", () => {
       if (this.enabled) {
         this.buttonImage.setTexture(this.defaultTexture); // 恢复默认状态的纹理
+        if (config.callbackOut) {
+          config.callbackOut();
+        }
       }
     });
   }
