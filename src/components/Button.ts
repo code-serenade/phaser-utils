@@ -7,7 +7,8 @@ interface ButtonComponentConfig {
   imageSize?: { width: number; height: number }; // 图片的大小
   text?: string; // 将 text 设置为可选
   textStyle?: Phaser.Types.GameObjects.Text.TextStyle;
-  callback?: () => void;
+  callbackDown?: () => void;
+  callbackUp?: () => void;
 }
 
 export class ButtonComponent extends Phaser.GameObjects.Container {
@@ -60,6 +61,9 @@ export class ButtonComponent extends Phaser.GameObjects.Container {
     this.buttonImage.on("pointerdown", () => {
       if (this.enabled) {
         this.buttonImage.setTexture(this.clickedTexture); // 切换到点击状态的纹理
+        if (config.callbackDown) {
+          config.callbackDown();
+        }
       }
     });
 
@@ -67,9 +71,9 @@ export class ButtonComponent extends Phaser.GameObjects.Container {
     this.buttonImage.on("pointerup", () => {
       if (this.enabled) {
         this.buttonImage.setTexture(this.defaultTexture); // 恢复默认状态的纹理
-      }
-      if (config.callback) {
-        config.callback();
+        if (config.callbackUp) {
+          config.callbackUp();
+        }
       }
     });
 
@@ -106,27 +110,42 @@ export class ButtonComponent extends Phaser.GameObjects.Container {
     return this;
   }
 
+  set_avalible(flag: boolean): void {
+    if (flag) {
+      this.enable();
+    } else {
+      this.disable();
+    }
+  }
+
   // 启用按钮
-  public enable(): void {
+  private enable(): void {
     this.enabled = true;
     this.buttonImage.setInteractive();
     this.setAlpha(1); // 恢复全透明度
   }
 
   // 禁用按钮
-  public disable(): void {
+  private disable(): void {
     this.enabled = false;
     this.buttonImage.disableInteractive();
     this.setAlpha(0.5); // 使按钮半透明以表示禁用状态
   }
 
+  set_visible(flag: boolean): void {
+    if (flag) {
+      this.show();
+    } else {
+      this.hide();
+    }
+  }
   // 显示按钮
-  public show(): void {
+  private show(): void {
     this.setVisible(true);
   }
 
   // 隐藏按钮
-  public hide(): void {
+  private hide(): void {
     this.setVisible(false);
   }
 }
