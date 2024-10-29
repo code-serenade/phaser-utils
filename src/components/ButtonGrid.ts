@@ -56,18 +56,7 @@ export class ButtonGrid {
         const buttonText = buttonTexts[textIndex] || `Button ${textIndex + 1}`;
         const callback = callbacks[textIndex];
 
-        const button = new ButtonComponent(
-          this.scene,
-          x,
-          y,
-          defaultTexture,
-          clickedTexture,
-          buttonWidth,
-          buttonHeight,
-          buttonText,
-          textStyle,
-          callback
-        );
+        const button = new ButtonComponent(this.scene, this.config);
 
         this.buttonGroup.add(button);
       }

@@ -44,9 +44,6 @@ export class LabelComponent extends Phaser.GameObjects.Container {
     const textOrigin = config.textOrigin ?? { x: 0.5, y: 0.5 };
     this.labelText.setOrigin(textOrigin.x, textOrigin.y);
     this.add(this.labelText);
-
-    // 将 Label 作为一个容器添加到场景中
-    scene.add.existing(this);
   }
 
   // 更新标签文本

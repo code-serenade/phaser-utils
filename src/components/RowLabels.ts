@@ -29,7 +29,6 @@ export class RowLabelComponent extends Phaser.GameObjects.Container {
     this.spacing = config.spacing ?? 5;
 
     this.initialize(scene, config.textStyle ?? {});
-    scene.add.existing(this);
   }
 
   private initialize(

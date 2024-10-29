@@ -23,8 +23,6 @@ export class SpinComponent extends Phaser.GameObjects.Container {
     this.numSpin = numSpin;
     this.sizeX = sizeX;
     this.sizeY = sizeY;
-    this.scene.add.existing(this);
-
     this.createLights(texture);
     this.positionSprites();
   }
@@ -95,10 +93,11 @@ export class SpinComponent extends Phaser.GameObjects.Container {
     this.lights.forEach((light) => light.setVisible(false));
   }
 
-  set_currentPos(index: number): void {
+  set_currentPos(index: number): this {
     if (Number.isInteger(index) && index >= 0 && index <= this.numSpin) {
       this.currentPos = index;
     }
+    return this;
   }
 
   move(): void {
