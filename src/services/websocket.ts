@@ -99,15 +99,17 @@ export class WebSocketService {
     }
   }
 
-  public send(cmd: number, data: object) {
+  public send(cmd: number, data: object): boolean {
     if (this.socket.readyState === WebSocket.OPEN) {
       let message = protoService.encode(cmd, data);
       this.socket.send(message);
+      return true;
     } else {
       console.error(
         "WebSocket is not open. Ready state:",
         this.socket.readyState
       );
+      return false;
     }
   }
 
