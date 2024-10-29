@@ -70,11 +70,7 @@ export class ButtonGrid {
   public setInteractive(enabled: boolean): void {
     this.buttonGroup.children.iterate(
       (button: Phaser.GameObjects.GameObject) => {
-        if (enabled) {
-          (button as ButtonComponent).enable();
-        } else {
-          (button as ButtonComponent).disable();
-        }
+        (button as ButtonComponent).set_available(enabled);
         return true; // 返回 true 以继续遍历
       }
     );

@@ -110,7 +110,7 @@ export class ButtonComponent extends Phaser.GameObjects.Container {
     return this;
   }
 
-  set_avalible(flag: boolean): void {
+  set_available(flag: boolean): void {
     if (flag) {
       this.enable();
     } else {
