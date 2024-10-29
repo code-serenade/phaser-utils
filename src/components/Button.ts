@@ -9,7 +9,7 @@ interface ButtonComponentConfig {
   textStyle?: Phaser.Types.GameObjects.Text.TextStyle;
   callbackDown?: () => void;
   callbackUp?: () => void;
-  callbackOut: () => void;
+  callbackOut?: () => void;
 }
 
 export class ButtonComponent extends Phaser.GameObjects.Container {
