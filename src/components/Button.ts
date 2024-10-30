@@ -7,6 +7,8 @@ interface ButtonComponentConfig {
   imageSize?: { width: number; height: number }; // 图片的大小
   text?: string; // 将 text 设置为可选
   textStyle?: Phaser.Types.GameObjects.Text.TextStyle;
+  textPosition?: { x: number; y: number };
+  textOrigin?: { x: number; y: number };
   callbackDown?: () => void;
   callbackUp?: () => void;
   callbackOut?: () => void;
@@ -42,7 +44,13 @@ export class ButtonComponent extends Phaser.GameObjects.Container {
 
     // 如果提供了文本，则创建按钮的文本
     if (config.text) {
-      this.buttonText = scene.add.text(0, 0, config.text, config.textStyle);
+      const { x: textX, y: textY } = config.textPosition ?? { x: 0, y: 0 };
+      this.buttonText = scene.add.text(
+        textX,
+        textY,
+        config.text,
+        config.textStyle
+      );
       this.buttonText.setOrigin(0.5, 0.5);
 
       // 调整文本的缩放比例，以适应按钮的大小
@@ -51,6 +59,8 @@ export class ButtonComponent extends Phaser.GameObjects.Container {
         const scaleY = config.imageSize.height / this.buttonImage.height;
         this.buttonText.setScale(Math.min(scaleX, scaleY));
       }
+      const textOrigin = config.textOrigin ?? { x: 0.5, y: 0.5 };
+      this.buttonText.setOrigin(textOrigin.x, textOrigin.y);
 
       this.add(this.buttonText);
     }
