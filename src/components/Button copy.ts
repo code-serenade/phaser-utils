@@ -12,7 +12,6 @@ interface ButtonComponentConfig {
   callbackDown?: () => void;
   callbackUp?: () => void;
   callbackOut?: () => void;
-  align?: "center" | "left" | "right" | "top" | "bottom"; // 添加对齐方式
 }
 
 export class ButtonComponent extends Phaser.GameObjects.Container {
@@ -39,25 +38,6 @@ export class ButtonComponent extends Phaser.GameObjects.Container {
         config.imageSize.width,
         config.imageSize.height
       );
-    }
-
-    // 设置对齐方式
-    switch (config.align) {
-      case "left":
-        this.buttonImage.setOrigin(0, 0.5);
-        break;
-      case "right":
-        this.buttonImage.setOrigin(1, 0.5);
-        break;
-      case "top":
-        this.buttonImage.setOrigin(0.5, 0);
-        break;
-      case "bottom":
-        this.buttonImage.setOrigin(0.5, 1);
-        break;
-      default:
-        this.buttonImage.setOrigin(0.5, 0.5); // 默认居中
-        break;
     }
 
     this.add(this.buttonImage);
@@ -173,7 +153,6 @@ export class ButtonComponent extends Phaser.GameObjects.Container {
       this.hide();
     }
   }
-
   // 显示按钮
   private show(): void {
     this.setVisible(true);
